@@ -7,7 +7,7 @@ def main():
     base_dir = Path(__file__).resolve().parents[1]
 
     pdfs_dir = base_dir / "data" / "pdfs_test"
-    pdf_path = pdfs_dir / "Dados_pessoais_falsos_texto.pdf"
+    pdf_path = pdfs_dir / "Dados_pessoais_falsos_texto_3.pdf"
 
     if not pdf_path.exists():
         print(f"Arquivo não encontrado: {pdf_path}")
