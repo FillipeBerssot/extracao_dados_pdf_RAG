@@ -18,6 +18,11 @@ from core.extractor_ai import (
     people_to_public_dict_list,
     extract_people_from_text,   
 )
+from core.utils import (
+    build_document_records,
+    add_document_records,
+    reset_documents_db,
+)
 
 
 
@@ -27,6 +32,10 @@ def main():
         page_icon="📄",
         layout="wide",
     )
+
+    if "DB_RESET_DONE" not in st.session_state:
+        reset_documents_db()
+        st.session_state["DB_RESET_DONE"] = True
 
     st.title("📄 Extração de Dados de PDFs com IA + RAG")
     st.caption(
@@ -143,6 +152,18 @@ def main():
                             else:
                                 st.success(
                                     f"✅ Campos extraídos com sucesso para {len(people)} pessoa(s)!"
+                                )
+                            
+                                records = build_document_records(
+                                    people=people,
+                                    source_file_name=uploaded_file.name,
+                                    source_pdf_is_scanned=result.is_probably_scanned,
+                                )
+                                add_document_records(records)
+
+                                st.info(
+                                    f"💾 {len(records)} registro(s) salvo(s) na base local "
+                                    "`data/documentos.json`."
                                 )
 
                                 public_list = people_to_public_dict_list(people)
