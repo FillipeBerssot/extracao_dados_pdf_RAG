@@ -13,6 +13,11 @@ from core.pdf_reader import (
     PDFExtractionResult,
     extract_text_from_pdf_bytes,
 )
+from core.extractor_ai import (
+    ExtractionAIError,
+    people_to_public_dict_list,
+    extract_people_from_text,   
+)
 
 
 
@@ -65,7 +70,7 @@ def main():
         )
 
         uploaded_file = st.file_uploader(
-            "📎 Envie um arquivo PDF de document",
+            "📎 Envie um arquivo PDF de documento",
             type=["pdf"],
         )
 
@@ -110,6 +115,41 @@ def main():
                     "Ele provavelmente é um documento scaneado apenas como imagem."
                 )
 
+            st.markdown("### 🧬 Extração de campos do documento com IA")
+
+            if not result.full_text.strip():
+                st.info(
+                    "Não há texto extraído suficiente para enviar à IA. "
+                    "Se este documento for apenas uma imagem, será necessário OCR "
+                    "para extrair o texto antes (passo que podemos adicionar depois)."
+                )
+            else:
+                if st.button("🔍 Extrair campos com IA (uma ou mais pessoas)"):
+                    with st.spinner("Chamando a IA para extrair campos..."):
+                        try:
+                            people = extract_people_from_text(
+                                document_text=result.full_text,
+                                api_key=st.session_state["OPENAI_API_KEY"],
+                            )
+                        except ExtractionAIError as e:
+                            st.error(f"❌ Erro na extração via IA: {e}")
+                        except Exception as e:
+                            st.error(f"❌ Erro inesperado na extração via IA: {e}")
+                        else:
+                            if not people:
+                                st.warning(
+                                    "Nenhuma pessoa foi identificada no texto do documento."
+                                )
+                            else:
+                                st.success(
+                                    f"✅ Campos extraídos com sucesso para {len(people)} pessoa(s)!"
+                                )
+
+                                public_list = people_to_public_dict_list(people)
+
+                                for idx, person_dict in enumerate(public_list, start=1):
+                                    st.markdown(f"#### 👤 Pessoa {idx}")
+                                    st.json(person_dict)
 
     with col2:
         st.subheader("2. Consulta aos dados (RAG)")
