@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import uuid
+import unicodedata
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -112,3 +113,26 @@ def build_document_records(
         records.append(record)
 
     return records
+
+
+def sanitize_text_for_ai(text: str) -> str:
+    """
+    Limpa o texto antes de enviar para a IA, removendo caracteres que podem causar
+    problemas de encoding (acentos estranhos, símbolos 'quebrados', etc).
+
+    Estratégia:
+    - Normaliza Unicode (NFKD).
+    - Converte para ASCII ignorando caracteres que não podem ser representados.
+      (Isso remove acentos, aspas curvas e símbolos bizarros.)
+    """
+    if not text:
+        return text
+
+    # Normaliza acentos e caracteres compostos
+    normalized = unicodedata.normalize("NFKD", text)
+
+    # Remove tudo que não cabe em ASCII (acentos, símbolos estranhos, etc.)
+    ascii_bytes = normalized.encode("ascii", errors="ignore")
+    safe_text = ascii_bytes.decode("ascii")
+
+    return safe_text

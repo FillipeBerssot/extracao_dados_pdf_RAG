@@ -49,46 +49,50 @@ def _build_client(api_key: str) -> OpenAI:
 
 def _build_prompt(document_text: str) -> str:
     """
-    Constrói o prompt para extração de DADOS DE UMA OU MAIS PESSOAS.
+    Constroi o prompt para extracao de DADOS DE UMA OU MAIS PESSOAS.
+
+    Importante: usamos apenas caracteres ASCII para evitar problemas
+    de encoding em alguns ambientes.
     """
     return f"""
-    Você é um assistente especializado em extrair dados estruturados de documentos
-    de identificação brasileiros (RG, CPF, CNH, etc.).
+    You are an assistant specialized in extracting structured data from Brazilian identity documents
+    (RG, CPF, CNH, etc.).
 
-    O texto a seguir pode conter dados de UMA ou MAIS pessoas diferentes.
+    The text below may contain data from ONE or MORE different people.
 
-    Sua tarefa é:
-    1. Identificar cada pessoa distinta presente no texto.
-    2. Para cada pessoa, extrair APENAS os campos abaixo.
+    Your task:
 
-    Retorne a resposta EXCLUSIVAMENTE em JSON válido, no formato:
+    1. Identify each distinct person mentioned in the text.
+    2. For each person, extract ONLY the fields below.
+
+    Return the answer STRICTLY as valid JSON, with the format:
 
     {{
-        "pessoas": [
-            {{
-            "nome": string | null,
-            "cpf": string | null,
-            "rg": string | null,
-            "data_nascimento": string | null,
-            "genero": string | null,
-            "orgao_emissor": string | null,
-            "tipo_documento": string | null,
-            "numero_documento": string | null
-            }},
-            ...
-        ]
+    "pessoas": [
+        {{
+        "nome": string or null,
+        "cpf": string or null,
+        "rg": string or null,
+        "data_nascimento": string or null,
+        "genero": string or null,
+        "orgao_emissor": string or null,
+        "tipo_documento": string or null,
+        "numero_documento": string or null
+        }},
+        ...
+    ]
     }}
 
-    Regras importantes:
-    - Não invente informações.
-    - Se um campo não estiver claro ou não existir para uma pessoa, use null.
-    - Uma mesma pessoa não deve aparecer duplicada.
-    - Use o formato de data exatamente como aparece no documento (ex: "01/01/1990").
-    - Para CPF/RG, mantenha pontos e traços se estiverem no documento.
-    - Para "genero", use o texto exato que aparecer (ex: "MASCULINO", "FEMININO").
-    - Se não encontrar nenhuma pessoa, retorne "pessoas": [].
+    Rules:
+    - Do NOT invent information.
+    - If a field is not clearly present for a person, use null.
+    - The same person must not appear twice.
+    - Use the date format exactly as it appears in the document (for example: "01/01/1990").
+    - For CPF/RG, keep dots and dashes if they appear in the document.
+    - For "genero", use the exact text that appears (for example: "MASCULINO", "FEMININO").
+    - If you cannot find any person, return "pessoas": [].
 
-    Texto do documento:
+    Document text:
 
     \"\"\"{document_text}\"\"\"
     """.strip()
@@ -120,9 +124,10 @@ def extract_people_from_text(
                 {
                     "role": "system",
                     "content": (
-                        "Você é um assistente de extração de dados estruturados, "
-                        "especializado em documentos de identificação brasileiros."
-                    ),                
+                        "You are an assistant for structured data extraction, "
+                        "specialized in Brazilian identity documents (RG, CPF, CNH, etc.). "
+                        "Always respond with valid JSON only."
+                    ),
                 },
                 {
                     "role": "user",
@@ -130,7 +135,6 @@ def extract_people_from_text(
                 },
             ],
         )
-
     except Exception as exc:
         raise ExtractionAIError(f"Erro ao chamar a API da OpenAI: {exc}") from exc
     
