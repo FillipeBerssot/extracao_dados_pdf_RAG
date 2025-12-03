@@ -8,7 +8,8 @@ def render_sidebar():
 
         api_key = st.text_input("OpenAI API Key", type="password")
 
-        st.info("Nota: Usamos o modelo GPT-4o.")
+        st.divider()
+        st.info("ℹ️ Os dados são salvos apenas na memória temporária desta sessão. Ao recarregar a página, tudo é apagado.")
         
         return api_key
 
@@ -29,15 +30,20 @@ def render_chat(api_key):
         if prompt := st.chat_input("Pergunte algo..."):
             with st.chat_message("user"):
                 st.markdown(prompt)
+            
             st.session_state["messages"].append({"role": "user", "content": prompt})
 
             contexto = str(st.session_state["dados_documentos"])
-            with st.chat_message("assistant"):
-                with st.spinner("Pensando..."):
-                    resposta = consultar_chat_rag(prompt, contexto, api_key)
-                    st.markdown(resposta)
             
-            st.session_state["messages"].append({"role": "assistant", "content": resposta})
+            with st.chat_message("assistant"):
+                with st.spinner("Analisando documentos..."):
+                    try:
+                        resposta = consultar_chat_rag(prompt, contexto, api_key)
+                        st.markdown(resposta)
+                        
+                        st.session_state["messages"].append({"role": "assistant", "content": resposta})
+                    except Exception as e:
+                        st.error(f"Erro ao consultar IA: {e}")
 
     else:
-        st.info("👆 Extraia um documento para habilitar o chat.")
+        st.info("👆 Faça o upload e extração de um documento acima para liberar o chat.")

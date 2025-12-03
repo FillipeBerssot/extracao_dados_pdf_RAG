@@ -1,7 +1,12 @@
 from openai import OpenAI
-from src.models.schemas import DadosDocumento
-from src.services.image_utils import convert_pdf_to_images, melhorar_imagem, encode_image_to_base64
-import streamlit as st
+from src.models.schemas import (
+    AnaliseDocumentos,
+)
+from src.services.image_utils import (
+    convert_pdf_to_images, 
+    melhorar_imagem, 
+    encode_image_to_base64,
+)
 
 
 def extrair_dados_documento(file_bytes, api_key):
@@ -12,11 +17,18 @@ def extrair_dados_documento(file_bytes, api_key):
     
     raw_images = convert_pdf_to_images(file_bytes)
     processed_images = []
-    
-    content_payload = [
-        {"type": "text", "text": "Analise estas imagens. Extraia os dados solicitados de forma consolidada. Se houver frente e verso, combine as informações."}
-    ]
 
+    content_payload = [
+        {
+            "type": "text", 
+            "text": """Analise as imagens visualmente. O seu objetivo é extração de texto OCR de alta fidelidade.
+            1. Identifique os campos solicitados.
+            2. Transcreva o texto EXATAMENTE como ele aparece na imagem (preservando pontos, traços e formatação).
+            3. Se um campo estiver ilegível ou não existir, retorne null (não invente dados).
+            4. Se houver múltiplos documentos, separe-os."""
+        }
+    ]
+    
     for img in raw_images:
         img_melhorada = melhorar_imagem(img)
         processed_images.append(img_melhorada) 
@@ -33,21 +45,26 @@ def extrair_dados_documento(file_bytes, api_key):
         messages=[
             {
                 "role": "system",
-                "content": "Você é um especialista em extração de dados de documentos brasileiros (RG, CNH e afins)."
+                "content": "Você é um motor de OCR de precisão para documentos brasileiros. Não corrija erros de ortografia do documento. Não remova pontuação. Extraia o texto literal."
             },
             {
                 "role": "user",
                 "content": content_payload
             }
         ],
-        response_format=DadosDocumento,
+        response_format=AnaliseDocumentos,
     )
 
     return completion.choices[0].message.parsed, processed_images
 
 
 def consultar_chat_rag(pergunta, dados_json, api_key):
-    """Função separada para o Chat RAG"""
+    """
+    Função de RAG (Retrieval-Augmented Generation).
+    Recebe a pergunta do usuário e o JSON dos documentos extraídos.
+    A IA responde com base APENAS nesses dados.
+    client = OpenAI(api_key=api_key)
+    """
     client = OpenAI(api_key=api_key)
 
     response = client.chat.completions.create(
@@ -55,10 +72,18 @@ def consultar_chat_rag(pergunta, dados_json, api_key):
         messages=[
             {
                 "role": "system", 
-                "content": f"Você é um assistente útil. Responda usando APENAS estes dados JSON: {dados_json}"
+                "content": f"""Você é um assistente especializado em análise de documentos.
+                Você tem acesso aos seguintes dados extraídos de documentos (formato JSON):
+                
+                {dados_json}
+                
+                Instruções:
+                1. Responda à pergunta do usuário baseando-se ESTRITAMENTE nesses dados.
+                2. Se a informação não estiver no JSON, diga "Não encontrei essa informação nos documentos".
+                3. Seja direto e prestativo.
+                """
             },
             {"role": "user", "content": pergunta}
         ]
     )
-
     return response.choices[0].message.content

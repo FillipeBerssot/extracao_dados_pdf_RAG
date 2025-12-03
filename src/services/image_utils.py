@@ -6,7 +6,7 @@ from pdf2image import convert_from_bytes
 
 def convert_pdf_to_images(file_bytes):
     """Converte bytes de PDF em uma lista de imagens PIL."""
-    return convert_from_bytes(file_bytes)
+    return convert_from_bytes(file_bytes, dpi=300)
 
 
 def melhorar_imagem(img):
@@ -14,7 +14,7 @@ def melhorar_imagem(img):
     img = img.convert('L')
 
     enhancer_contrast = ImageEnhance.Contrast(img)
-    img = enhancer_contrast.enhance(2.0)
+    img = enhancer_contrast.enhance(2.5)
 
     enhancer_sharpness = ImageEnhance.Sharpness(img)
     img = enhancer_sharpness.enhance(2.0)
