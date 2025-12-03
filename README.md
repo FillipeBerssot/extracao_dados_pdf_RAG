@@ -17,7 +17,7 @@
 
 ## Link para utilizar no Streamlit
 
-https://extracao-dados-rag.streamlit.app/
+👉  https://extracao-dados-rag.streamlit.app/
 
 ## 📖 Sobre o Projeto
 
