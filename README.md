@@ -5,20 +5,27 @@
 ![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-412991?style=for-the-badge&logo=openai&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Projeto_de_Estudo-success?style=for-the-badge)
 
+---
+
+## 📸 Imagens do Projeto
+
 <details>
   <summary><strong>📸 Clique aqui para ver as Screenshots do Projeto</strong></summary>
-  <summary><strong>⚠️ Nota de Privacidade:</strong> Todos os dados pessoais e documentos exibidos nestas imagens são <strong>fictícios (mock data)</strong>, gerados exclusivamente para fins de demonstração e validação técnica. Não correspondem a pessoas reais.<summary><strong>
   <br>
   <div align="center">
-    <img src="/home/fillipe/extracao_dados_pdf_RAG/src/images/inicial.png" alt="Tela Inicial" width="700">
+    <p>
+      <em>⚠️ <strong>Nota de Privacidade:</strong> Todos os dados pessoais e documentos exibidos nestas imagens são <strong>fictícios (mock data)</strong>, gerados exclusivamente para fins de demonstração e validação técnica. Não correspondem a pessoas reais.</em>
+    </p>
+    <br>
+    <img src="src/images/inicial.png" alt="Tela Inicial" width="700">
     <br><br>
-    <img src="/home/fillipe/extracao_dados_pdf_RAG/src/images/analise_doc.png" alt="Resultado da Extração (Dados)" width="700">
+    <img src="src/images/analise_doc.png" alt="Resultado da Extração (Dados)" width="700">
     <br><br>
-    <img src="/home/fillipe/extracao_dados_pdf_RAG/src/images/chat_rag.png" alt="Resultado do Chat (RAG)" width="700">
+    <img src="src/images/chat_rag.png" alt="Resultado do Chat (RAG)" width="700">
   </div>
 </details>
 
-Lembrando que os dados utilizados nas imagens são inválidos, inexistentes.
+---
 
 ## Link para utilizar no Streamlit
 
