@@ -109,7 +109,7 @@ Certifique-se de ter instalado:
 Clone o repositório e entre na pasta:
 
 ```bash
-git clone [https://https://github.com/FillipeBerssot/extracao_dados_pdf_RAG.git](https://https://github.com/FillipeBerssot/extracao_dados_pdf_RAG)
+git clone [https://github.com/FillipeBerssot/extracao_dados_pdf_RAG.git](https://github.com/FillipeBerssot/extracao_dados_pdf_RAG)
 cd extrator-documentos
 Crie e ative um ambiente virtual (Recomendado):
 
