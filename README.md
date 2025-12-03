@@ -71,18 +71,21 @@ O projeto foi construído utilizando uma arquitetura modular moderna. Abaixo, de
 O projeto segue padrões de Engenharia de Software, evitando scripts únicos ("código espaguete") para facilitar a manutenção.
 
 ```text
-/extrator-documentos
+/EXTRACAO_DADOS_PDF_RAG
 ├── main.py                # O Maestro: Gerencia a Interface e o fluxo de dados
 ├── requirements.txt       # Bibliotecas Python necessárias
 ├── packages.txt           # Dependências de sistema (Linux/Debian) para Deploy
-└── src/
-    ├── models/
-    │   └── schemas.py     # Definição dos campos (JSON) e regras de validação
-    ├── services/
-    │   ├── ai_service.py  # Comunicação com a OpenAI e lógica do Chat RAG
-    │   └── image_utils.py # Pipeline de tratamento de imagem (DPI, Contraste)
-    └── ui/
-        └── interface.py   # Componentes visuais (Barra lateral, Chat)
+├── src/
+|    ├── models/
+|    │   └── schemas.py     # Definição dos campos (JSON) e regras de validação
+|    ├── services/
+|    │   ├── ai_service.py  # Comunicação com a OpenAI e lógica do Chat RAG
+|    │   └── image_utils.py # Pipeline de tratamento de imagem (DPI, Contraste)
+|    └── ui/
+|        └── interface.py   # Componentes visuais (Barra lateral, Chat)
+├─ README.md
+└─ .env                        # (opcional) OpenAI API Key
+```
 
 ---
 
@@ -131,6 +134,7 @@ Bash
 
 streamlit run main.py
 O navegador abrirá automaticamente em: http://localhost:8501
+```
 
 ---
 
