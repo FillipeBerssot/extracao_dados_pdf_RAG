@@ -109,11 +109,9 @@ Certifique-se de ter instalado:
 Clone o repositório e entre na pasta:
 
 ```bash
-git clone [https://seu-repositorio-aqui.git](https://seu-repositorio-aqui.git)
+git clone [https://https://github.com/FillipeBerssot/extracao_dados_pdf_RAG.git](https://https://github.com/FillipeBerssot/extracao_dados_pdf_RAG)
 cd extrator-documentos
 Crie e ative um ambiente virtual (Recomendado):
-
-Bash
 
 # Linux/Mac/WSL
 python3 -m venv venv
@@ -124,13 +122,9 @@ python -m venv venv
 .\venv\Scripts\activate
 Instale as dependências:
 
-Bash
-
 pip install -r requirements.txt
 3. Execução
 Rode o comando do Streamlit:
-
-Bash
 
 streamlit run main.py
 O navegador abrirá automaticamente em: http://localhost:8501
